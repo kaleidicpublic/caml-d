@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+#include "caml/mlvalues.h"
+#include "caml/misc.h"
+#include "caml/memory.h"
+#include "caml/alloc.h"
+#include "caml/fail.h"
+#include "caml/osdeps.h"
+#include "caml/callback.h"
+#include "caml/custom.h"
+
+/* File modwrap.c -- wrappers around the OCaml functions */
+
+extern(C):
+int fib(int n)
+{
+  static value* fib_closure = null;
+  if (fib_closure is null) fib_closure = caml_named_value("fib");
+  //return Int_val(caml_callback(*fib_closure, Val_int(n)));
+
+  // work around dpp bug
+  return cast(int)((caml_callback(*fib_closure, (cast(intnat)((cast(uintnat)(n)<<1))+1)))>>1);
+}
+
+char * format_result(int n)
+{
+  static value* format_result_closure = null;
+  if (format_result_closure is null)
+    format_result_closure = caml_named_value("format_result");
+  // return strdup(String_val(caml_callback(*format_result_closure, Val_int(n))));
+  
+// work around dpp bug
+  return strdup(cast(char*)(caml_callback(*format_result_closure, (cast(intnat)((cast(uintnat)(n)<<1))+1))));
+  /* We copy the C string returned by String_val to the C heap
+     so that it remains valid after garbage collection. */
+}
+
+

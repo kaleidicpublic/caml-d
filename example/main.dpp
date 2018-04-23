@@ -1,0 +1,29 @@
+/* File main.c -- a sample client for the OCaml functions */
+
+#include <stdio.h>
+#include "caml/callback.h"
+
+import std.stdio;
+import std.algorithm:map;
+import std.string:fromStringz;
+
+extern (C) int fib(int n);
+extern (C) char * format_result(int n);
+
+int main(string[] args)
+{
+  import std.algorithm:joiner;
+  import std.array:array;
+  import std.string:toStringz;
+  auto argv = cast(char*[])args.map!(arg=> arg.toStringz).array;
+  argv~=null;
+  int result;
+
+  /* Initialize OCaml code */
+  caml_startup(argv.ptr);
+  /* Do some computation */
+  result = fib(10);
+  writefln("fib(10) = %s\n", format_result(result).fromStringz);
+  return 0;
+}
+

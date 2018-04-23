@@ -1,0 +1,6 @@
+name "caml-d"
+description "D bindings for Ocaml"
+authors "Laeeth Isharc"
+copyright "Copyright © 2018, Laeeth Isharc"
+license "proprietary"
+dependency "dpp" version="~>0.0.1"
